@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawab Kurta | Royal Men's Wear</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        beige: { 100: '#FBF9F5', 200: '#F4EFE6', 300: '#EADDCE' },
+                        brown: { 900: '#3A2618', 800: '#463325', 600: '#6A4E36' },
+                        rust: '#8A3324',
+                    },
+                    fontFamily: { serif: ['Cinzel', 'serif'], body: ['Lora', 'serif'] }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #F4EFE6; }
+        ::-webkit-scrollbar-thumb { background: #463325; border-radius: 4px; }
+        .ornate-border { position: relative; }
+        .ornate-border::before, .ornate-border::after { content: "✤"; position: absolute; color: #8A3324; font-size: 1.2rem; top: 50%; transform: translateY(-50%); }
+        .ornate-border::before { left: -30px; }
+        .ornate-border::after { right: -30px; }
+        .modal-overlay { opacity: 0; visibility: hidden; transition: all 0.3s ease-in-out; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { transform: scale(0.95); opacity: 0; transition: all 0.3s ease-in-out; }
+        .modal-overlay.active .modal-content { transform: scale(1); opacity: 1; }
+        .drawer-overlay { opacity: 0; visibility: hidden; transition: all 0.4s ease-in-out; }
+        .drawer-overlay.active { opacity: 1; visibility: visible; }
+        .drawer-content { transform: translateX(100%); transition: transform 0.5s cubic-bezier(0.77, 0, 0.175, 1); }
+        .drawer-overlay.active .drawer-content { transform: translateX(0); }
+    </style>
+</head>
+<body class="bg-beige-200 font-body text-brown-800 antialiased selection:bg-rust selection:text-beige-100 flex flex-col min-h-screen">
+
+    <header class="fixed w-full top-0 bg-beige-100/95 backdrop-blur-sm border-b border-brown-900/10 z-40 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <div class="flex-shrink-0 flex flex-col items-center justify-center">
+                    <h1 class="font-serif text-2xl tracking-wider text-brown-900 font-bold">NAWAB KURTA</h1>
+                    <span class="text-[0.65rem] tracking-[0.2em] text-rust uppercase">Royal Men's Wear</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="mainMenuBtn" class="text-brown-900 hover:text-rust transition-colors duration-300 focus:outline-none p-2 active:scale-95 group">
+                        <svg class="w-8 h-8 transform group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAzNHYtNGgtMnY0aC00djJoNHY0aDJ2LTRoNHYtMmgtNHptMC0zMFYwaC0ydjRoLTR2Mmg0djRoMnYtNGg0VjJoLTR6bS0yMCAyMHYtNGgtMnY0aC00djJoNHY0aDJ2LTRoNHYtMmgtNHoiIGZpbGw9IiM0NjMzMjUiIGZpbGwtb3BhY2l0eT0iMSIvPjwvZz48L3N2Zz4=')]"></div>
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <h2 class="font-serif text-5xl md:text-7xl text-brown-900 mb-6 drop-shadow-sm">Nawab Kurta</h2>
+            <div class="inline-block relative">
+                <p class="font-serif text-xl md:text-2xl text-rust mb-8 italic tracking-wide ornate-border">Royal Men's Wear</p>
+            </div>
+            <p class="text-lg md:text-xl text-brown-600 max-w-2xl mx-auto leading-relaxed border-t border-b border-brown-900/20 py-6">
+                House of Premium Men's Kurtas & Pathanis. Step into elegance with our carefully curated collection of traditional menswear, crafted for the modern royal.
+            </p>
+            <div class="mt-10">
+                <a href="collections.html" class="inline-block bg-brown-900 text-beige-100 px-8 py-3 rounded-sm font-serif tracking-wider hover:bg-rust active:scale-95 hover:-translate-y-1 transition-all duration-300 shadow-lg hover:shadow-xl">
+                    View Entire Catalog
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="categories" class="py-20 bg-beige-100 border-t border-brown-900/10 flex-grow">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="font-serif text-3xl md:text-4xl text-brown-900 mb-4">Our Collections</h2>
+                <div class="h-px w-24 bg-rust mx-auto mb-8"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <a href="collections.html" class="group relative overflow-hidden border border-brown-900/20 rounded-sm aspect-[3/4] bg-beige-200 shadow-sm block">
+                    <img src="https://placehold.co/600x800/EADDCE/463325?text=Classic+Kurtas" alt="Classic Kurtas" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-brown-900/30 group-hover:bg-brown-900/50 transition-colors duration-300 flex items-center justify-center">
+                        <div class="text-center border-y border-beige-100/50 py-4 px-8 backdrop-blur-sm">
+                            <h3 class="font-serif text-2xl text-beige-100 tracking-widest uppercase">Kurtas</h3>
+                        </div>
+                    </div>
+                </a>
+                <a href="collections.html" class="group relative overflow-hidden border border-brown-900/20 rounded-sm aspect-[3/4] bg-beige-200 shadow-sm block mt-0 md:mt-12">
+                    <img src="https://placehold.co/600x800/EADDCE/463325?text=Pathani+Suits" alt="Pathani Suits" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-brown-900/30 group-hover:bg-brown-900/50 transition-colors duration-300 flex items-center justify-center">
+                        <div class="text-center border-y border-beige-100/50 py-4 px-8 backdrop-blur-sm">
+                            <h3 class="font-serif text-2xl text-beige-100 tracking-widest uppercase">Pathanis</h3>
+                        </div>
+                    </div>
+                </a>
+                <a href="collections.html" class="group relative overflow-hidden border border-brown-900/20 rounded-sm aspect-[3/4] bg-beige-200 shadow-sm block">
+                    <img src="https://placehold.co/600x800/EADDCE/463325?text=Royal+Sherwanis" alt="Royal Wedding Wear" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-brown-900/30 group-hover:bg-brown-900/50 transition-colors duration-300 flex items-center justify-center">
+                        <div class="text-center border-y border-beige-100/50 py-4 px-8 backdrop-blur-sm">
+                            <h3 class="font-serif text-2xl text-beige-100 tracking-widest uppercase">Wedding</h3>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" class="bg-brown-900 text-beige-100 pt-16 pb-8 border-t-4 border-rust">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12 text-center md:text-left border-b border-beige-300/20 pb-12">
+                <div class="flex flex-col items-center md:items-start justify-center">
+                    <h2 class="font-serif text-3xl mb-2">Nawab Kurta</h2>
+                    <p class="text-rust text-sm tracking-widest uppercase mb-4">Royal Men's Wear</p>
+                    <p class="text-beige-300 italic text-sm">House of Premium Men's Kurtas & Pathanis</p>
+                </div>
+                <div class="flex flex-col items-center md:items-start">
+                    <h3 class="font-serif text-xl mb-6 text-beige-300 uppercase tracking-widest">Visit Us</h3>
+                    <a href="https://maps.app.goo.gl/ma63B121b1TtuMir5" target="_blank" rel="noopener noreferrer" class="flex items-start justify-center md:justify-start gap-2 mb-4 text-sm leading-relaxed max-w-xs hover:text-rust transition-colors text-center md:text-left">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/a/aa/Google_Maps_icon_%282020%29.svg" alt="Google Maps" class="w-5 h-5 mt-0.5 shrink-0">
+                        <span>G-50/5, HIGH TENSION ROAD,<br>SHAHEEN BAGH OKHLA,<br>NEW DELHI - 110025</span>
+                    </a>
+                </div>
+                <div class="flex flex-col items-center md:items-start">
+                    <h3 class="font-serif text-xl mb-6 text-beige-300 uppercase tracking-widest">Connect</h3>
+                    <div class="flex items-center justify-center md:justify-start gap-2 mb-4 text-sm">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="w-5 h-5 shrink-0">
+                        <span>+91 87967 75280</span>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col items-center justify-center text-beige-300/50 text-xs">
+                <!-- Hidden Secret Link to Admin Panel -->
+                <p><a href="admin.html" class="hover:text-beige-300 transition-colors">&copy; 2026 Nawab Kurta. All rights reserved.</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <div id="mainMenuOverlay" class="drawer-overlay fixed inset-0 bg-brown-900/60 backdrop-blur-sm z-[60]">
+        <div class="drawer-content absolute right-0 top-0 bottom-0 w-full max-w-sm bg-beige-100 shadow-2xl flex flex-col p-8 border-l border-brown-900/20 overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-brown-900/10 pb-6">
+                <h2 class="font-serif text-2xl text-brown-900">Menu</h2>
+                <button id="closeMenuBtn" class="text-brown-900 hover:text-rust text-4xl leading-none focus:outline-none hover:rotate-90 transition-transform duration-300">&times;</button>
+            </div>
+            <div class="flex flex-col space-y-6 mt-8">
+                <a href="collections.html" class="menu-link group relative overflow-hidden rounded border border-brown-900/10 p-6 bg-beige-200 hover:bg-beige-300 hover:border-brown-900/30 transition-all shadow-sm">
+                    <h3 class="font-serif text-xl text-brown-900 group-hover:text-rust transition-colors flex items-center justify-between">All Collections <span class="text-lg opacity-0 group-hover:opacity-100 transition-all">→</span></h3>
+                </a>
+                <button id="openConnectBtn" class="text-left menu-link group relative overflow-hidden rounded border border-brown-900/10 p-6 bg-beige-200 hover:bg-beige-300 transition-all shadow-sm focus:outline-none">
+                    <h3 class="font-serif text-xl text-brown-900 group-hover:text-rust transition-colors flex items-center justify-between">Connect <span class="text-lg opacity-0 group-hover:opacity-100 transition-all">→</span></h3>
+                </button>
+                <button id="openPaymentBtn" class="text-left menu-link group relative overflow-hidden rounded border border-brown-900/10 p-6 bg-beige-200 hover:bg-beige-300 transition-all shadow-sm focus:outline-none">
+                    <h3 class="font-serif text-xl text-brown-900 group-hover:text-rust transition-colors flex items-center justify-between">Payment Method <span class="text-lg opacity-0 group-hover:opacity-100 transition-all">→</span></h3>
+                </button>
+                <button id="openPolicyBtn" class="text-left menu-link group relative overflow-hidden rounded border border-brown-900/10 p-6 bg-beige-200 hover:bg-beige-300 transition-all shadow-sm focus:outline-none">
+                    <h3 class="font-serif text-xl text-brown-900 group-hover:text-rust transition-colors flex items-center justify-between">Return Policy <span class="text-lg opacity-0 group-hover:opacity-100 transition-all">✦</span></h3>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="policyModal" class="modal-overlay fixed inset-0 z-[70] flex items-center justify-center bg-brown-900/90 backdrop-blur-md p-4">
+        <div class="modal-content bg-beige-100 p-2 sm:p-3 rounded-sm shadow-2xl max-w-2xl w-full border border-brown-900/30 relative">
+            <button class="close-modal absolute top-3 right-3 sm:top-4 sm:right-4 w-10 h-10 flex items-center justify-center bg-beige-100 rounded-full shadow-md border border-brown-900/20 text-brown-900 hover:text-rust text-2xl focus:outline-none z-20 hover:rotate-90 transition-all">&times;</button>
+            <div class="border border-brown-900/40 p-1 sm:p-2 h-full">
+                <div class="border border-brown-900/80 p-6 sm:p-12 text-center relative h-full flex flex-col items-center justify-center">
+                    <h2 class="font-serif text-xl md:text-2xl tracking-widest text-brown-900 mb-6 md:mb-8 uppercase">Exchange Policy</h2>
+                    <h3 class="font-serif text-3xl md:text-5xl text-brown-900 leading-tight">ONLY EXCHANGE</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="connectModal" class="modal-overlay fixed inset-0 z-[70] flex items-center justify-center bg-brown-900/90 backdrop-blur-md p-6 sm:p-10">
+        <div class="modal-content bg-black p-1 sm:p-2 rounded-sm shadow-2xl max-w-4xl w-full border border-rust/50 relative flex items-center justify-center md:min-h-[500px]">
+            <button class="close-modal absolute -top-4 -right-4 sm:-top-5 sm:-right-5 w-10 h-10 flex items-center justify-center bg-beige-100 rounded-full shadow-lg border border-brown-900/20 text-brown-900 hover:text-rust text-2xl focus:outline-none z-20 hover:rotate-90 transition-all">&times;</button>
+            <img src="https://i.postimg.cc/sX0Tf1MW/file-00000000b0448211aab2d3e62c5228d8.png" class="w-full h-auto max-h-[80vh] object-contain opacity-95">
+        </div>
+    </div>
+
+    <div id="paymentModal" class="modal-overlay fixed inset-0 z-[70] flex items-center justify-center bg-brown-900/90 backdrop-blur-md p-6 sm:p-10">
+        <div class="modal-content bg-gradient-to-br from-brown-900 to-black p-1 sm:p-2 rounded-sm shadow-2xl max-w-4xl w-full border border-rust/50 relative flex flex-col md:flex-row items-stretch justify-center min-h-[400px] md:min-h-[500px]">
+            <button class="close-modal absolute -top-4 -right-4 sm:-top-5 sm:-right-5 w-10 h-10 flex items-center justify-center bg-beige-100 rounded-full shadow-lg border border-brown-900/20 text-brown-900 hover:text-rust text-2xl focus:outline-none z-20 hover:rotate-90 transition-all">&times;</button>
+            <div class="w-full md:w-1/2 flex items-center justify-center p-6 md:p-10">
+                <img src="https://i.postimg.cc/SxTdfJrh/NAWAB-KURTA1792906552443.jpg" class="w-full h-auto opacity-95">
+            </div>
+            <div class="w-full md:w-1/2 flex flex-col items-center justify-center p-8 md:p-12 border-t md:border-t-0 md:border-l border-rust/30 bg-black/20">
+                <h3 class="font-serif text-2xl md:text-3xl text-beige-100 mb-3 tracking-widest uppercase text-center">We Accept</h3>
+                <p class="text-beige-300/80 text-xs md:text-sm tracking-[0.2em] uppercase mb-10 text-center leading-relaxed">
+                    Credit Card <span class="text-rust mx-1">•</span> Debit Card <span class="md:hidden text-rust mx-1">•</span> Prepaid Card
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const openModal = (modal) => modal.classList.add('active');
+        const closeModal = (modal) => modal.classList.remove('active');
+
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', (e) => closeModal(e.target.closest('.modal-overlay')));
+        });
+
+        const menuOverlay = document.getElementById('mainMenuOverlay');
+        document.getElementById('mainMenuBtn').addEventListener('click', () => openModal(menuOverlay));
+        document.getElementById('closeMenuBtn').addEventListener('click', () => closeModal(menuOverlay));
+
+        document.querySelectorAll('.menu-link').forEach(link => {
+            if(link.tagName === 'A') link.addEventListener('click', () => closeModal(menuOverlay));
+        });
+
+        document.getElementById('openPolicyBtn').addEventListener('click', () => {
+            closeModal(menuOverlay);
+            setTimeout(() => openModal(document.getElementById('policyModal')), 300);
+        });
+        document.getElementById('openConnectBtn').addEventListener('click', () => {
+            closeModal(menuOverlay);
+            setTimeout(() => openModal(document.getElementById('connectModal')), 300);
+        });
+        document.getElementById('openPaymentBtn').addEventListener('click', () => {
+            closeModal(menuOverlay);
+            setTimeout(() => openModal(document.getElementById('paymentModal')), 300);
+        });
+    </script>
+</body>
+</html>

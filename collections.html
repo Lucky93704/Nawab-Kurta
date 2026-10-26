@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawab Kurta | Full Catalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { beige: { 100: '#FBF9F5', 200: '#F4EFE6', 300: '#EADDCE' }, brown: { 900: '#3A2618', 800: '#463325', 600: '#6A4E36' }, rust: '#8A3324' }, fontFamily: { serif: ['Cinzel', 'serif'], body: ['Lora', 'serif'] } } } }
+    </script>
+    <style>
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="bg-beige-200 font-body text-brown-800 antialiased pt-20 flex flex-col min-h-screen">
+    <header class="fixed w-full top-0 bg-beige-100/95 backdrop-blur-sm border-b border-brown-900/10 z-40">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-20">
+                <a href="index.html" class="flex items-center text-brown-900 hover:text-rust transition-colors group">
+                    <span class="font-serif text-sm tracking-widest uppercase">Home</span>
+                </a>
+                <h1 class="font-serif text-xl tracking-wider text-brown-900 font-bold text-center">NAWAB KURTA</h1>
+                <div class="w-10"></div>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-10 bg-beige-100 flex-grow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div id="loadingIndicator" class="text-center text-brown-600 py-10 font-serif animate-pulse">Loading Collection...</div>
+            <div id="catalogContainer" class="space-y-16"></div>
+        </div>
+    </section>
+
+    <footer class="bg-brown-900 text-beige-100 pt-8 pb-8 border-t-4 border-rust mt-auto text-center text-xs">
+        <p>&copy; 2026 Nawab Kurta. All rights reserved.</p>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyABZ87suVwjvFmTypTf-rT2JeVNt0BiCYg",
+            authDomain: "nawab-kurta.firebaseapp.com",
+            projectId: "nawab-kurta",
+            storageBucket: "nawab-kurta.firebasestorage.app",
+            messagingSenderId: "737817418519",
+            appId: "1:737817418519:web:d51a80136fa8130ea4f552",
+            measurementId: "G-L43Q66F9CG"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        
+        const catalogContainer = document.getElementById('catalogContainer');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        onSnapshot(collection(db, "products"), (snapshot) => {
+            loadingIndicator.classList.add('hidden');
+            catalogContainer.innerHTML = '';
+            let allProducts = [];
+            snapshot.forEach((doc) => allProducts.push({ id: doc.id, ...doc.data() }));
+            
+            const uniqueCategories = [];
+            allProducts.forEach(p => {
+                let cat = (p.category || 'Uncategorized').trim();
+                cat = cat.replace(/\b\w/g, c => c.toUpperCase());
+                if (!uniqueCategories.includes(cat)) {
+                    uniqueCategories.push(cat);
+                }
+            });
+
+            uniqueCategories.forEach(category => {
+                const productsInCategory = allProducts.filter(p => {
+                    const pCat = (p.category || 'Uncategorized').trim().toLowerCase();
+                    return pCat === category.toLowerCase();
+                });
+                
+                productsInCategory.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+                
+                if(productsInCategory.length > 0) {
+                    const section = document.createElement('div');
+                    let gridHtml = productsInCategory.map(product => {
+                        const images = (product.imageUrls && product.imageUrls.length > 0) 
+                            ? product.imageUrls 
+                            : (product.imageUrl ? [product.imageUrl] : ['https://placehold.co/600x800/EADDCE/463325?text=NA']);
+                        
+                        const sliderHtml = `
+                            <div class="relative w-full aspect-[3/4] mb-4 border border-brown-900/20 rounded-sm bg-beige-200 shadow-sm overflow-hidden group/slider">
+                                <div class="image-scroll-container flex overflow-x-auto snap-x snap-mandatory hide-scrollbar w-full h-full scroll-smooth">
+                                    ${images.map(img => `<img src="${img}" class="w-full h-full object-cover flex-shrink-0 snap-center" onerror="this.src='https://placehold.co/600x800/EADDCE/463325?text=NA'">`).join('')}
+                                </div>
+                                ${images.length > 1 ? `
+                                <div class="absolute bottom-2 left-0 right-0 flex justify-center space-x-1.5 z-10 pointer-events-none">
+                                    ${images.map(() => `<div class="w-1.5 h-1.5 rounded-full bg-white/70 shadow-sm"></div>`).join('')}
+                                </div>
+                                <button onclick="event.stopPropagation(); this.parentElement.querySelector('.image-scroll-container').scrollBy({left: -this.parentElement.clientWidth, behavior: 'smooth'})" class="absolute left-1 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-brown-900 rounded-full p-1 opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 focus:outline-none backdrop-blur-sm shadow-md">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                </button>
+                                <button onclick="event.stopPropagation(); this.parentElement.querySelector('.image-scroll-container').scrollBy({left: this.parentElement.clientWidth, behavior: 'smooth'})" class="absolute right-1 top-1/2 -translate-y-1/2 bg-white/70 hover:bg-white text-brown-900 rounded-full p-1 opacity-0 group-hover/slider:opacity-100 transition-opacity z-20 focus:outline-none backdrop-blur-sm shadow-md">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </button>
+                                ` : ''}
+                            </div>
+                        `;
+
+                        return `
+                        <div class="group relative cursor-pointer active:scale-[0.98] transition-transform duration-200 min-w-[200px] max-w-[300px] flex-none">
+                            ${sliderHtml}
+                            <h3 class="font-serif text-lg text-brown-900 text-center px-2">${product.name}</h3>
+                            <p class="text-rust text-sm text-center italic mt-1 px-2">${product.subtitle}</p>
+                            <div class="text-center"><p class="text-brown-900 font-semibold text-sm mt-1">${product.price}</p></div>
+                        </div>
+                        `;
+                    }).join('');
+
+                    section.innerHTML = `
+                        <div>
+                            <h2 class="font-serif text-2xl text-brown-900 mb-2 border-l-4 border-rust pl-4">${category}</h2>
+                            <div class="flex overflow-x-auto space-x-6 pb-4 pt-4 hide-scrollbar snap-x">
+                                ${gridHtml}
+                            </div>
+                        </div>
+                    `;
+                    catalogContainer.appendChild(section);
+                }
+            });
+            
+            if (allProducts.length === 0) {
+                catalogContainer.innerHTML = '<p class="text-center py-10">No products available yet.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

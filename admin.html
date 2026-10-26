@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Nawab Kurta</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = { theme: { extend: { colors: { beige: { 100: '#FBF9F5', 200: '#F4EFE6', 300: '#EADDCE' }, brown: { 900: '#3A2618', 800: '#463325', 600: '#6A4E36' }, rust: '#8A3324' }, fontFamily: { serif: ['Cinzel', 'serif'], body: ['Lora', 'serif'] } } } }
+    </script>
+</head>
+<body class="bg-beige-200 font-body text-brown-800 antialiased min-h-screen">
+    <header class="bg-brown-900 text-beige-100 p-4 shadow-md">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="font-serif text-xl tracking-wider font-bold">NAWAB KURTA ADMIN</h1>
+            <div id="authSection" class="hidden flex items-center space-x-4">
+                <span id="userName" class="text-sm"></span>
+                <button id="logoutBtn" class="border border-beige-100 px-3 py-1 rounded-sm text-sm hover:bg-beige-100 hover:text-brown-900 transition">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <main id="loginPanel" class="max-w-md mx-auto mt-20 p-8 bg-beige-100 rounded shadow-sm border border-brown-900/10">
+        <h2 class="font-serif text-2xl mb-6 text-center text-brown-900">Admin Login</h2>
+        <form id="loginForm" class="space-y-4">
+            <div>
+                <label class="block text-sm font-semibold mb-1">Email</label>
+                <input type="email" id="email" required class="w-full p-2 border border-brown-900/30 rounded bg-white focus:outline-none focus:border-rust">
+            </div>
+            <div>
+                <label class="block text-sm font-semibold mb-1">Password</label>
+                <input type="password" id="password" required class="w-full p-2 border border-brown-900/30 rounded bg-white focus:outline-none focus:border-rust">
+            </div>
+            <button type="submit" class="w-full bg-rust text-beige-100 py-2 rounded hover:bg-red-800 transition-colors">Login</button>
+            <p id="loginMsg" class="text-sm text-center text-red-600 hidden"></p>
+        </form>
+    </main>
+
+    <main id="adminPanel" class="hidden max-w-6xl mx-auto p-4 sm:p-8 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Form Section -->
+        <div class="md:col-span-1 bg-beige-100 p-6 rounded shadow-sm border border-brown-900/10 h-fit">
+            <h2 id="formTitle" class="font-serif text-2xl text-brown-900 mb-6 border-b border-brown-900/20 pb-2">Add New Product</h2>
+            <form id="productForm" class="space-y-4">
+                <input type="hidden" id="pId">
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Product Name</label>
+                    <input type="text" id="pName" required placeholder="e.g. Classic White Kurta" class="w-full p-2 border border-brown-900/30 rounded bg-white focus:outline-none focus:border-rust">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Subtitle / Material</label>
+                    <input type="text" id="pSubtitle" required placeholder="e.g. Pure Cotton" class="w-full p-2 border border-brown-900/30 rounded bg-white focus:outline-none focus:border-rust">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Price</label>
+                    <input type="text" id="pPrice" required placeholder="e.g. ₹1,499" class="w-full p-2 border border-brown-900/30 rounded bg-white focus:outline-none focus:border-rust">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Image URLs (Separate with commas or new lines)</label>
+                    <textarea id="pImageUrl" rows="3" required placeholder="https://image1.jpg,&#10;https://image2.jpg" class="w-full p-2 border border-brown-900/30 rounded bg-white focus:outline-none focus:border-rust resize-y"></textarea>
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold mb-1">Category</label>
+                    <input type="text" id="pCategory" required placeholder="e.g. Simple Kurta" class="w-full p-2 border border-brown-900/30 rounded bg-white focus:outline-none focus:border-rust">
+                </div>
+                <div class="flex gap-2 mt-4">
+                    <button type="submit" id="submitBtn" class="w-full bg-brown-900 text-beige-100 py-3 rounded hover:bg-rust transition-colors font-serif tracking-wider">Add Product</button>
+                    <button type="button" id="cancelEditBtn" class="hidden w-1/3 border border-brown-900 text-brown-900 py-3 rounded hover:bg-beige-200 transition-colors font-serif tracking-wider">Cancel</button>
+                </div>
+                <p id="formMessage" class="text-sm text-center mt-2 hidden"></p>
+            </form>
+        </div>
+        
+        <!-- Table Section -->
+        <div class="md:col-span-2 bg-beige-100 p-6 rounded shadow-sm border border-brown-900/10">
+            <h2 class="font-serif text-2xl text-brown-900 mb-6 border-b border-brown-900/20 pb-2">Manage Products</h2>
+            <div id="loadingMsg" class="text-center py-4 animate-pulse">Loading products...</div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse hidden" id="productTable">
+                    <thead>
+                        <tr class="border-b-2 border-brown-900/20 text-sm">
+                            <th class="py-2 px-2">Image</th>
+                            <th class="py-2 px-2">Name</th>
+                            <th class="py-2 px-2">Category</th>
+                            <th class="py-2 px-2">Price</th>
+                            <th class="py-2 px-2 text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="productList" class="text-sm"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyABZ87suVwjvFmTypTf-rT2JeVNt0BiCYg",
+            authDomain: "nawab-kurta.firebaseapp.com",
+            projectId: "nawab-kurta",
+            storageBucket: "nawab-kurta.firebasestorage.app",
+            messagingSenderId: "737817418519",
+            appId: "1:737817418519:web:d51a80136fa8130ea4f552",
+            measurementId: "G-L43Q66F9CG"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        const loginForm = document.getElementById('loginForm');
+        const loginPanel = document.getElementById('loginPanel');
+        const adminPanel = document.getElementById('adminPanel');
+        const authSection = document.getElementById('authSection');
+        const userName = document.getElementById('userName');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginMsg = document.getElementById('loginMsg');
+        
+        const productForm = document.getElementById('productForm');
+        const formTitle = document.getElementById('formTitle');
+        const submitBtn = document.getElementById('submitBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+        const formMsg = document.getElementById('formMessage');
+        const productTable = document.getElementById('productTable');
+        const productList = document.getElementById('productList');
+        const loadingMsg = document.getElementById('loadingMsg');
+        
+        let allProducts = [];
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                loginMsg.classList.add('hidden');
+            } catch (error) {
+                loginMsg.textContent = "Invalid email or password.";
+                loginMsg.classList.remove('hidden');
+            }
+        });
+
+        logoutBtn.addEventListener('click', () => signOut(auth));
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginPanel.classList.add('hidden');
+                adminPanel.classList.remove('hidden');
+                authSection.classList.remove('hidden');
+                userName.textContent = user.email;
+                loadProducts();
+            } else {
+                loginPanel.classList.remove('hidden');
+                adminPanel.classList.add('hidden');
+                authSection.classList.add('hidden');
+            }
+        });
+
+        productForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            formMsg.classList.remove('hidden');
+            formMsg.textContent = 'Saving...';
+            formMsg.className = "text-sm text-center mt-2 text-brown-600";
+
+            const pId = document.getElementById('pId').value;
+            
+            // Process multiple URLs
+            const rawUrls = document.getElementById('pImageUrl').value;
+            const urlsArray = rawUrls.split(/[,\n]+/).map(url => url.trim()).filter(url => url !== '');
+
+            const data = {
+                name: document.getElementById('pName').value,
+                subtitle: document.getElementById('pSubtitle').value,
+                price: document.getElementById('pPrice').value,
+                imageUrls: urlsArray,
+                imageUrl: urlsArray.length > 0 ? urlsArray[0] : '', // Fallback for old code
+                category: document.getElementById('pCategory').value
+            };
+
+            try {
+                if (pId) {
+                    await updateDoc(doc(db, "products", pId), data);
+                    formMsg.textContent = 'Product Updated Successfully!';
+                    resetForm();
+                } else {
+                    data.createdAt = Date.now();
+                    await addDoc(collection(db, "products"), data);
+                    formMsg.textContent = 'Product Added Successfully!';
+                    productForm.reset();
+                }
+                formMsg.className = "text-sm text-center mt-2 text-green-600 font-bold";
+                setTimeout(() => formMsg.classList.add('hidden'), 3000);
+            } catch (error) {
+                formMsg.textContent = 'Error: ' + error.message;
+                formMsg.className = "text-sm text-center mt-2 text-rust font-bold";
+            }
+        });
+
+        cancelEditBtn.addEventListener('click', resetForm);
+
+        function resetForm() {
+            productForm.reset();
+            document.getElementById('pId').value = '';
+            formTitle.textContent = 'Add New Product';
+            submitBtn.textContent = 'Add Product';
+            cancelEditBtn.classList.add('hidden');
+        }
+
+        function loadProducts() {
+            onSnapshot(collection(db, "products"), (snapshot) => {
+                loadingMsg.classList.add('hidden');
+                productTable.classList.remove('hidden');
+                productList.innerHTML = '';
+                
+                allProducts = [];
+                snapshot.forEach(doc => allProducts.push({ id: doc.id, ...doc.data() }));
+                allProducts.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+                allProducts.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.className = "border-b border-brown-900/10 hover:bg-beige-200/50";
+                    
+                    const firstImg = (p.imageUrls && p.imageUrls.length > 0) ? p.imageUrls[0] : (p.imageUrl || 'https://placehold.co/100x100?text=NA');
+
+                    tr.innerHTML = `
+                        <td class="py-2 px-2"><img src="${firstImg}" class="w-10 h-12 object-cover rounded" onerror="this.src='https://placehold.co/100x100?text=NA'"></td>
+                        <td class="py-2 px-2 font-semibold">${p.name}</td>
+                        <td class="py-2 px-2"><span class="bg-brown-900/10 px-2 py-1 rounded text-xs">${p.category}</span></td>
+                        <td class="py-2 px-2">${p.price}</td>
+                        <td class="py-2 px-2 text-right">
+                            <button onclick="editProduct('${p.id}')" class="text-brown-600 hover:text-brown-900 hover:underline text-sm font-semibold mr-3">Edit</button>
+                            <button onclick="deleteProduct('${p.id}')" class="text-rust hover:text-red-600 hover:underline text-sm font-semibold">Delete</button>
+                        </td>
+                    `;
+                    productList.appendChild(tr);
+                });
+            });
+        }
+
+        window.editProduct = (id) => {
+            const p = allProducts.find(prod => prod.id === id);
+            if (p) {
+                document.getElementById('pId').value = p.id;
+                document.getElementById('pName').value = p.name;
+                document.getElementById('pSubtitle').value = p.subtitle;
+                document.getElementById('pPrice').value = p.price;
+                
+                // Join array back to textarea string
+                const imgUrls = p.imageUrls ? p.imageUrls.join(',\n') : (p.imageUrl || '');
+                document.getElementById('pImageUrl').value = imgUrls;
+                
+                document.getElementById('pCategory').value = p.category;
+                
+                formTitle.textContent = 'Edit Product';
+                submitBtn.textContent = 'Save Changes';
+                cancelEditBtn.classList.remove('hidden');
+                
+                document.getElementById('formTitle').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        window.deleteProduct = async (id) => {
+            if (confirm("Are you sure you want to delete this product?")) {
+                await deleteDoc(doc(db, "products", id));
+            }
+        }
+    </script>
+</body>
+</html>
